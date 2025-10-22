@@ -1,0 +1,17 @@
+# Define o comportamento padrão para arquivos de texto
+* text=auto
+
+# Garante que arquivos de código-fonte C/C++ tenham quebras de linha consistentes (LF)
+*.c    text eol=lf
+*.h    text eol=lf
+*.s    text eol=lf
+*.ld   text eol=lf
+
+# Garante consistência para outros arquivos comuns de texto
+*.txt  text eol=lf
+*.md   text eol=lf
+*.xml  text eol=lf
+*.svg  text eol=lf
+
+# Para arquivos de shell script, força o uso de LF para compatibilidade
+*.sh   text eol=lf
