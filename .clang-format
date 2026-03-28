@@ -1,0 +1,7 @@
+---
+BasedOnStyle: llvm
+IndentWidth: 4
+# AllowShortFunctionsOnASingleLine: None
+AlignConsecutiveMacros: true
+ColumnLimit: 200
+AllowShortFunctionsOnASingleLine: None

@@ -1,0 +1,50 @@
+{
+  "C Header File (.h)": {
+    "prefix": "hf",
+    "body": [
+      "/**",
+      " * @file ${TM_FILENAME}",
+      " * @brief  none",
+      " * @version 0.1",
+      " * @author Your name here",
+      " * @date ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+      " */",
+      "",
+      "#ifndef ${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_H",
+      "#define ${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_H",
+      "",
+      "$0",
+      "",
+      "#endif // ${TM_FILENAME_BASE/(.*)/${1:/upcase}/}_H"
+    ],
+    "description": "c header template"
+  },
+  "C Source File (.c)": {
+    "prefix": "sf",
+    "body": [
+    "/**",
+    "* @file    ${TM_FILENAME}",
+    "* @brief   none", 
+    "* @version 0.1.0",
+    "* @author  Your name here",
+    "* @date    ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+    "*/"
+    ],
+    "description": "c source template"
+  },
+
+  "Comments": {
+    "prefix": "com",
+    "body": [
+    "/*",
+    "* @brief       ",
+    "* @param[in]   ",
+    "* @return      ",
+    "*            - ", 
+    "*            - ", 
+    "* @note       ",
+    "*/"
+    ],
+    "description": "comments template"
+  }
+}

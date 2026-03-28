@@ -1,0 +1,28 @@
+{
+    "name": "stm32wbxx embedded environment",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+
+    "runArgs": [
+        "--privileged",
+        "-v", "/dev/bus/usb:/dev/bus/usb"
+    ],
+    
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "llvm-vs-code-extensions.vscode-clangd",
+                "twxs.cmake",
+                "mcu-debug.debug-tracker-vscode",
+                "marus25.cortex-debug",
+                "mcu-debug.memory-view",
+                "mcu-debug.rtos-views",
+                "cschlosser.doxdocgen",
+                "eamodio.gitlens",
+                "cweijan.vscode-office"
+            ]
+        }     
+    }
+}

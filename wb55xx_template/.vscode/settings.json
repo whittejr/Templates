@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "stm32wb55xx.h": "c"
-    },
-    "cortex-debug.variableUseNaturalFormat": true
-}

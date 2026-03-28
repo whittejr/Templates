@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "configure",
+      "type": "shell",
+      "command": "cmake --preset Debug",
+      "problemMatcher": []
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "cmake --build --preset Debug",
+      "dependsOn": "configure",
+      "group": "build"
+    },
+    {
+    "label": "flash",
+    "type": "shell",
+    "command": "openocd",
+    "args": [
+      "-f", "interface/stlink.cfg",
+      "-f", "target/stm32wbx.cfg",
+      "-c", "program ${workspaceFolder}/build/Debug/stm32wb55-Template.elf verify reset exit"
+    ],
+    "dependsOn": "build",
+    "problemMatcher": []
+    }
+  ]
+}
