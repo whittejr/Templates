@@ -1,2 +1,3 @@
-# epaper-watch-fw
-Watch based on stm32wb using oximeter, epaper/mip display, accelerometer for fall detection and bluetooh, focused on low power consumption.
+# embedded environment
+Template of an embedded environment focused on modularity and modern project-ready structure.
+Focused on STM32 microcontrollers but more uCs on the future.

@@ -2,10 +2,9 @@
   "version": 3,
   "configurePresets": [
     {
-      "name": "default",
+      "name": "base-toolchain",
       "hidden": true,
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/${presetName}",
       "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
@@ -13,36 +12,42 @@
     },
 
     {
-      "name": "Debug",
-      "inherits": "default",
+      "name": "stm32wb55-base",
+      "hidden": true,
+      "inherits": "base-toolchain",
       "cacheVariables": {
+        "MCU_FAMILY": "STM32WB",
+        "TARGET_MCU": "STM32WB55xx"
+      }
+    },
 
+    {
+      "name": "stm32wb55-debug",
+      "displayName": "STM32WB55 (Debug)",
+      "inherits": "stm32wb55-base",
+      "binaryDir": "${sourceDir}/build/wb55-debug",
+      "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
-      "name": "RelWithDebInfo",
-      "inherits": "default",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-      }
-    },
-    {
-      "name": "Release",
-      "inherits": "default",
+      "name": "stm32wb55-release",
+      "displayName": "STM32WB55 (Release)",
+      "inherits": "stm32wb55-base",
+      "binaryDir": "${sourceDir}/build/wb55-release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
     }
   ],
   "buildPresets": [
-  {
-    "name": "Debug",
-    "configurePreset": "Debug"
-  },
-  {
-    "name": "Release",
-    "configurePreset": "Release"
-  }
-]
+    {
+      "name": "stm32wb55-debug",
+      "configurePreset": "stm32wb55-debug"
+    },
+    {
+      "name": "stm32wb55-release",
+      "configurePreset": "stm32wb55-release"
+    }
+  ]
 }

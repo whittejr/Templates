@@ -1,5 +1,5 @@
 {
-    "name": "stm32wbxx embedded environment",
+    "name": "embedded environment",
     "build": {
         "dockerfile": "Dockerfile",
         "context": ".."
@@ -15,6 +15,7 @@
             "extensions": [
                 "llvm-vs-code-extensions.vscode-clangd",
                 "twxs.cmake",
+                "ms-vscode.cmake-tools",
                 "mcu-debug.debug-tracker-vscode",
                 "marus25.cortex-debug",
                 "mcu-debug.memory-view",
