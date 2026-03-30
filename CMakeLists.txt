@@ -56,7 +56,7 @@ set(APP_INCLUDES
 # 3. CRIAÇÃO DO EXECUTÁVEL E VÍNCULOS
 # ==============================================================================
 add_executable(${EXECUTABLE} 
-    ${APP_SOURCES} 
+    ${APP_SOURCES}  
     ${HAL_SOURCES}  # Variável preenchida pelo cmake/mcu/STM32WB.cmake
 )
 

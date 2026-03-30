@@ -24,7 +24,7 @@
         "interface/stlink.cfg",
         "target/stm32wbx.cfg"
       ],
-      "svdFile": "${workspaceFolder}/documentation/STM32WB55_CM4.svd",
+      "svdFile": "${workspaceFolder}/tools/STM32WB55_CM4.svd",
 
       "liveWatch": {
         "enabled": true,
