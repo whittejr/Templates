@@ -4,13 +4,13 @@
     {
       "label": "configure",
       "type": "shell",
-      "command": "cmake --preset Debug",
+      "command": "cmake --preset wb55-debug",
       "problemMatcher": []
     },
     {
       "label": "build",
       "type": "shell",
-      "command": "cmake --build --preset Debug",
+      "command": "cmake --build --preset wb55-debug",
       "dependsOn": "configure",
       "group": "build"
     },
@@ -21,7 +21,7 @@
     "args": [
       "-f", "interface/stlink.cfg",
       "-f", "target/stm32wbx.cfg",
-      "-c", "program ${workspaceFolder}/build/Debug/stm32wb55-Template.elf verify reset exit"
+      "-c", "program ${workspaceFolder}/build/wb55-debug/embedded-env.elf verify reset exit"
     ],
     "dependsOn": "build",
     "problemMatcher": []

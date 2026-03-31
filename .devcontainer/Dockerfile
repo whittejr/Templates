@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     openocd \
     usbutils \
     ncdu \
+    whiptail \
     tree \
     ca-certificates \
     sudo \

@@ -6,14 +6,12 @@
       "type": "cortex-debug",
       "request": "launch",
 
-      "preLaunchTask": "build",
-
       "cwd": "${workspaceFolder}",
-      "executable": "${workspaceFolder}/build/Debug/stm32wb55-Template.elf",
+      "executable": "${workspaceFolder}/build/wb55-debug/embedded-env.elf",
 
       "servertype": "openocd",
       "interface": "swd",
-      "device": "STM32WB55xx",
+      "device": "${command:cmake.getLaunchTargetDirectory}",
 
       "runToEntryPoint": "main",
       "showDevDebugOutput": "both",

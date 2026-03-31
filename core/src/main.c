@@ -1,25 +1,28 @@
-/**
- * @file    main.c
- * @brief
- * @version 1.0.0
- * @author  Alessandro Davi
- * @date    2025-12-31
- */
+#include "stm32wbxx_hal.h"
 
-#include "app_system.h"
-#include "oximeter_hal.h"
-#include <stdio.h>
+void SystemClock_Config(void);
 
-void errorHandler(void);
+int main(void)
+{
+    HAL_Init();
+    // SystemClock_Config();
 
-int main(void) {
-    if (app_system_init() != 0) errorHandler();
+    // 1. Habilita clock do GPIOE
+    __HAL_RCC_GPIOE_CLK_ENABLE();
 
-    while (1) {
-        
+    // 2. Configura PE4 como saída push-pull
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    GPIO_InitStruct.Pin = GPIO_PIN_4;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+    while (1)
+    {
+        HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
+        HAL_Delay(500);
     }
-}
-
-void errorHandler(void) {
-    while (1);
 }

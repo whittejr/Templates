@@ -22,7 +22,7 @@
     },
 
     {
-      "name": "stm32wb55-debug",
+      "name": "wb55-debug",
       "displayName": "STM32WB55 (Debug)",
       "inherits": "stm32wb55-base",
       "binaryDir": "${sourceDir}/build/wb55-debug",
@@ -42,8 +42,8 @@
   ],
   "buildPresets": [
     {
-      "name": "stm32wb55-debug",
-      "configurePreset": "stm32wb55-debug"
+      "name": "wb55-debug",
+      "configurePreset": "wb55-debug"
     },
     {
       "name": "stm32wb55-release",

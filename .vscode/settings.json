@@ -1,6 +1,4 @@
 {
-  "C_Cpp.intelliSenseEngine": "disabled",
-
   "[c]": {
     "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
   },
@@ -11,4 +9,5 @@
     "--query-driver=/opt/arm-gcc/bin/arm-none-eabi-*",
   ],
   "cortex-debug.variableUseNaturalFormat": false
+  
 }

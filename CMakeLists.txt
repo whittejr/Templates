@@ -1,106 +1,90 @@
 cmake_minimum_required(VERSION 3.22)
+project(${TARGET_MCU} C CXX ASM)
 
-# O nome do projeto agora é genérico e se baseia na pasta do repositório
-project(embedded-env C CXX ASM)
-
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
-# Configurações de Padrão C/C++
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS ON)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(PROJ_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-set(EXECUTABLE ${CMAKE_PROJECT_NAME})
+set(EXECUTABLE "firmware")
 
 # ==============================================================================
-# 1. ROTEAMENTO DE HARDWARE (A Mágica da Modularização)
+# 1. INJEÇÃO DE HARDWARE
 # ==============================================================================
-# A variável MCU_FAMILY vem do CMakePresets.json
 if(NOT DEFINED MCU_FAMILY)
-    message(FATAL_ERROR "MCU_FAMILY não definida! Por favor, selecione um Preset válido no VSCode.")
+    message(FATAL_ERROR "MCU_FAMILY não definida!")
 endif()
 
-# Carrega o arquivo específico do chip (ex: cmake/mcu/STM32WB.cmake)
-set(MCU_CONFIG_FILE "${PROJ_PATH}/cmake/mcu/${MCU_FAMILY}.cmake")
-if(EXISTS "${MCU_CONFIG_FILE}")
-    message(STATUS ">>> Injetando configurações de hardware para: ${MCU_FAMILY} (${TARGET_MCU})")
-    include("${MCU_CONFIG_FILE}")
-else()
-    message(FATAL_ERROR "Arquivo de configuração não encontrado em ${MCU_CONFIG_FILE}")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/mcu/${MCU_FAMILY}.cmake")
+
+# 🚨 AS ARMADILHAS DE DEBUG 🚨
+# Se as variáveis estiverem vazias, o CMake vai abortar e te avisar o porquê!
+if("${LINKER_SCRIPT}" STREQUAL "")
+    message(FATAL_ERROR "ERRO: A variável LINKER_SCRIPT está vazia! Verifique o seu arquivo stm32wb.cmake.")
+endif()
+
+if("${HAL_SOURCES}" STREQUAL "")
+    message(FATAL_ERROR "ERRO: A variável HAL_SOURCES está vazia! A HAL não será compilada.")
 endif()
 
 # ==============================================================================
-# 2. COLETA DOS SEUS ARQUIVOS (Core, Components, BSP)
+# 2. AUTO-DISCOVERY (O Radar com as suas pastas)
 # ==============================================================================
-# Em vez de usar scripts externos complexos, o GLOB_RECURSE acha seus arquivos 
-# automaticamente nas pastas da nossa nova arquitetura.
-file(GLOB_RECURSE APP_SOURCES
-    "Core/src/*.c"
-    "components/*.c"
-    "bsp/*.c"
+file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS
+    "core/src/*.c"
+    "lib/BSP/src/*.c"
+    "lib/components/*.c"
 )
 
-# Define as pastas onde estão os seus arquivos .h
-set(APP_INCLUDES
-    "${PROJ_PATH}/Core/inc"
-    "${PROJ_PATH}/components"
-    "${PROJ_PATH}/bsp"
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS 
+    "core/inc/*.h" 
+    "lib/BSP/inc/*.h" 
+    "lib/components/*.h"
 )
 
+set(APP_INCLUDES "")
+foreach(HEADER ${HEADER_FILES})
+    get_filename_component(HEADER_DIR ${HEADER} DIRECTORY)
+    list(APPEND APP_INCLUDES ${HEADER_DIR})
+endforeach()
+
+if(APP_INCLUDES)
+    list(REMOVE_DUPLICATES APP_INCLUDES)
+endif()
+
 # ==============================================================================
-# 3. CRIAÇÃO DO EXECUTÁVEL E VÍNCULOS
+# 3. CRIAÇÃO DO EXECUTÁVEL E INCLUDES
 # ==============================================================================
-add_executable(${EXECUTABLE} 
-    ${APP_SOURCES}  
-    ${HAL_SOURCES}  # Variável preenchida pelo cmake/mcu/STM32WB.cmake
-)
+# Se a armadilha não disparar, o executável vai receber a HAL perfeitamente
+add_executable(${EXECUTABLE} ${APP_SOURCES} ${HAL_SOURCES})
 
 target_include_directories(${EXECUTABLE} PRIVATE 
     ${APP_INCLUDES}
-    ${HAL_INCLUDES} # Variável preenchida pelo cmake/mcu/STM32WB.cmake
+    ${HAL_INCLUDES} 
 )
 
-target_compile_definitions(${EXECUTABLE} PRIVATE 
-    "USE_HAL_DRIVER"
-    "${TARGET_MCU}" # Variável injetada pelo CMakePresets.json
-)
-
-# ==============================================================================
-# 4. FLAGS DE COMPILAÇÃO E LINKER
-# ==============================================================================
-target_compile_options(${EXECUTABLE} PRIVATE
-    -Wall
-    -Wpedantic
+target_compile_definitions(${EXECUTABLE} PRIVATE USE_HAL_DRIVER ${TARGET_MCU})
+target_compile_options(${EXECUTABLE} PRIVATE 
+    -Wall 
+    -Wpedantic 
     -Wno-unused-parameter
+    -Wno-macro-redefined  # <--- Isso mata o aviso de "redefined"
 )
 
-# LINKER_SCRIPT foi definido dentro do seu cmake/mcu/STM32WB.cmake
 target_link_options(${EXECUTABLE} PRIVATE
     -T${LINKER_SCRIPT}
     -Wl,-Map=${CMAKE_PROJECT_NAME}.map
     --specs=nosys.specs
     --specs=nano.specs
-    #-u _printf_float # Descomente se for usar sprintf com float
-    -Wl,--start-group
-    -lc
-    -lm
-    -lstdc++
-    -lsupc++
-    -Wl,--end-group
     -Wl,--print-memory-usage
     -Wl,--gc-sections
 )
 
+target_link_libraries(${EXECUTABLE} PRIVATE -lc -lm -lstdc++ -lsupc++)
+
 # ==============================================================================
-# 5. PÓS-BUILD
+# 4. PÓS-BUILD
 # ==============================================================================
 add_custom_command(TARGET ${EXECUTABLE} POST_BUILD
     COMMAND ${CMAKE_SIZE} $<TARGET_FILE:${EXECUTABLE}>
 )
-
 set_target_properties(${EXECUTABLE} PROPERTIES SUFFIX ".elf")
