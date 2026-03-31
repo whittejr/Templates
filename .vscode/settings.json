@@ -8,6 +8,6 @@
   "clangd.arguments": [
     "--query-driver=/opt/arm-gcc/bin/arm-none-eabi-*",
   ],
-  "cortex-debug.variableUseNaturalFormat": false
+  "cortex-debug.variableUseNaturalFormat": true
   
 }

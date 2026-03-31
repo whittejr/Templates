@@ -1,16 +1,3 @@
-FROM debian:bookworm-slim as build
-
-RUN apt-get update && apt-get install -y wget xz-utils
-
-WORKDIR /tmp
-
-RUN wget --progress=dot:giga https://developer.arm.com/-/media/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi.tar.xz
-
-RUN mkdir -p /opt/arm-gcc \
-    && tar -xf arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi.tar.xz -C /opt/arm-gcc --strip-components=1
-
-WORKDIR /opt/arm-gcc
-
 FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -23,22 +10,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     openocd \
     usbutils \
     ncdu \
-    whiptail \
     tree \
     ca-certificates \
     sudo \
     python3 \
     python3-venv \
+    gcc-arm-none-eabi \
+    libnewlib-arm-none-eabi \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
     
-COPY --from=build /opt/arm-gcc /opt/arm-gcc
-
 # --- Configuração do Python (Isolado e Limpo) ---
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-# RUN pip install --no-cache-dir pyserial 
 
 ARG USERNAME=vscode
 ARG USER_UID=1000

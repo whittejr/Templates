@@ -79,7 +79,7 @@ target_link_options(${EXECUTABLE} PRIVATE
     -Wl,--gc-sections
 )
 
-target_link_libraries(${EXECUTABLE} PRIVATE -lc -lm -lstdc++ -lsupc++)
+target_link_libraries(${EXECUTABLE} PRIVATE -lc -lm)
 
 # ==============================================================================
 # 4. PÓS-BUILD

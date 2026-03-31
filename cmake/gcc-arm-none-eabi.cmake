@@ -1,7 +1,7 @@
 set(CMAKE_SYSTEM_NAME               Generic)
 set(CMAKE_SYSTEM_PROCESSOR          arm)
 
-set(TOOLCHAIN_PATH "/opt/arm-gcc/bin/")
+set(TOOLCHAIN_PATH "")
 set(TOOLCHAIN_PREFIX   arm-none-eabi-)
 
 set(CMAKE_C_COMPILER       "${TOOLCHAIN_PATH}${TOOLCHAIN_PREFIX}gcc" CACHE FILEPATH "C compiler" FORCE)

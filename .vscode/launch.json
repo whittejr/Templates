@@ -7,7 +7,7 @@
       "request": "launch",
 
       "cwd": "${workspaceFolder}",
-      "executable": "${workspaceFolder}/build/wb55-debug/embedded-env.elf",
+      "executable": "${workspaceFolder}/build/wb55-debug/firmware.elf",
 
       "servertype": "openocd",
       "interface": "swd",
