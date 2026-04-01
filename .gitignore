@@ -1,5 +1,3 @@
 build/
-.vscode/.cmake/
-.vscode/ipch/
-*.code-workspace
-
+lib/third_party/*
+!third_party/.gitkeep

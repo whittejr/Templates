@@ -6,13 +6,13 @@
       "type": "cortex-debug",
       "request": "launch",
       "cwd": "${workspaceFolder}",
-      "executable": "${command:cmake.launchTargetPath}",
+      "executable": "${workspaceFolder}/build/debug/firmware.elf",
       "servertype": "openocd",
       "interface": "swd",
       "runToEntryPoint": "main",
       "gdbPath": "/usr/bin/gdb-multiarch",
 
-      "preLaunchTask": "CMake: build",
+      "preLaunchTask": "Build",
       "configFiles": [
         "interface/stlink.cfg",
         "target/stm32wbx.cfg"

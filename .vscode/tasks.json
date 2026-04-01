@@ -2,11 +2,28 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Configure",
+      "type": "shell",
+      "command": "cmake --preset wb55-debug"
+    },
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "cmake --build --preset wb55-debug",
+      "dependsOn": [
+        "Configure"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
       "label": "Flash",
       "type": "shell",
-      "command": "openocd -f interface/stlink.cfg -f target/stm32wbx.cfg -c 'program ${command:cmake.launchTargetPath} verify reset exit'",
+      "command": "openocd -f interface/stlink.cfg -f target/stm32wbx.cfg -c 'program build/debug/firmware.elf verify reset exit'",
       "dependsOn": [
-        "CMake: build"
+        "Build"
       ],
       "problemMatcher": []
     }
