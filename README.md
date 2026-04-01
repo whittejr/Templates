@@ -1,115 +1,113 @@
+<div align="center">
+  <h1>🧠 Ambiente de Desenvolvimento STM32</h1>
+  <p>Um workspace isolado e conteinerizado para desenvolvimento moderno de firmware STM32.</p>
+
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker" />
+  <img src="https://img.shields.io/badge/C-00599C?style=flat-square&logo=c&logoColor=white" alt="C" />
+  <img src="https://img.shields.io/badge/CMake-064F8C?style=flat-square&logo=cmake&logoColor=white" alt="CMake" />
+  <img src="https://img.shields.io/badge/STM32-03234B?style=flat-square&logo=stmicroelectronics&logoColor=white" alt="STM32" />
+  <img src="https://img.shields.io/badge/WSL2-FCC624?style=flat-square&logo=linux&logoColor=black" alt="WSL2" />
+  <br>
+  <br>
+  <i>Leia em outros idiomas: <a href="README.md">English</a></i>
+</div>
+
 ---
 
-## 🛠️ Prerequisites
+## 📖 Introdução
 
-To build, debug, and flash firmware on Windows, install:
+Este repositório contém o ambiente de desenvolvimento e código-fonte para firmware baseado em **microcontroladores STM32**. Utilizando **Docker** e **WSL2**, o projeto garante que todas as ferramentas de build, toolchains e analisadores fiquem totalmente isolados e padronizados, sem poluir a sua máquina host.
 
-- Docker Desktop (with WSL2 integration enabled)
-- WSL2 (Windows Subsystem for Linux)
-- Visual Studio Code
-- Dev Containers extension (VSCode)
-- USBIPD-WIN (for forwarding ST-Link to WSL)
+### Por que usar este ambiente?
+
+Este projeto visa simplificar o desenvolvimento embarcado fornecendo um workspace reprodutível. Os princípios centrais incluem:
+
+* 🔵 **Isolamento:** Rode tudo dentro de um container, mantendo seu Windows limpo.
+* 🟢 **Padronização:** As mesmas ferramentas e versões para todos no projeto.
+* 🟡 **Debug Integrado:** Integração fluida com VSCode, USBIPD e ST-Link.
+* 🟣 **Portabilidade:** Estrutura fácil de escalar e adaptar para diferentes famílias STM32.
 
 ---
 
-## 🚀 Getting Started
+## 📑 Índice
 
-### 1. Clone the repository
+1. [Pré-requisitos](#-pré-requisitos)
+2. [Inicialização do Projeto](#-inicialização-do-projeto)
+3. [Setup do Microcontrolador](#-setup-do-microcontrolador)
+4. [Configuração do Target](#-configuração-do-target)
+5. [Debug via USBIPD](#-debug-via-usbipd)
 
-```bash
-git clone <your_repository_link.git>
-2. Start Docker Desktop
+---
 
-Make sure Docker is running.
+## 🛠️ Pré-requisitos
 
-3. Open in VSCode
+Para compilar, debugar e gravar o firmware no Windows, você precisará ter instalado na sua máquina host:
 
-Open the project folder in VSCode.
+* **Docker Desktop** (com integração WSL2 ativada)
+* **WSL2** (Windows Subsystem for Linux)
+* **VSCode** com a Extensão **Dev Containers**
+* **USBIPD-WIN** (ferramenta para repassar o ST-Link do Windows para o WSL)
 
-4. Reopen in container
+---
 
-Press:
+## 🚀 Inicialização do Projeto
 
-F1 or Ctrl + Shift + P
+Execute o comando abaixo no seu terminal para clonar o repositório:
 
-Then select:
+git clone <link_do_seu_repositorio.git>
+Passos para inicialização:
 
-Dev Containers: Reopen in Container
-5. Wait for environment setup
+Garanta que o Docker Desktop esteja rodando em segundo plano.
 
-The first build may take a few minutes.
+Abra a pasta do projeto no VSCode.
 
-⚙️ Microcontroller Setup
+Pressione F1 (ou Ctrl+Shift+P) para abrir a paleta de comandos.
 
-All commands below must be executed inside the container terminal.
+Digite e selecione: Dev Containers: Reopen in Container.
 
-1. Check supported MCUs
-/cmake/mcu/
+Aguarde o VSCode construir e iniciar o ambiente.
 
-Currently supported:
+⚙️ Setup do Microcontrolador
+Com o terminal do VSCode aberto já dentro do container, configure a família do seu chip:
 
-f1
-wb
-2. Download MCU dependencies
+Verifique o suporte: Confirme se a família do seu chip existe em /cmake/mcu/ (Atualmente suportados: wb, f1).
 
-Example for STM32F1:
+Baixe as dependências: Execute o script informando a família:
 
+Bash
 ./tools/get_mcu.sh f1
-3. Configure HAL
+Configure a HAL: Navegue até /third_party/stm32cube<chip>/Drivers/STM32XXXX_HAL_DRIVER/Inc/ e renomeie o arquivo stm32xxxx_hal_conf_template.h, removendo o sufixo _template.
 
-Go to:
+Defina o Chip: Adicione o #define do seu chip específico no arquivo stm32xxxx.h correspondente (ex: #define STM32F103xB).
 
-/third_party/stm32cube<chip>/Drivers/STM32XXXX_HAL_DRIVER/Inc/
+📦 Configuração do Target
+Ao iniciar um novo projeto ou trocar de chip, ajuste as configurações nos seguintes arquivos:
 
-Rename:
+.vscode/launch.json * Modifique o target para o chip correto.
 
-stm32xxxx_hal_conf_template.h → stm32xxxx_hal_conf.h
-4. Define your MCU
+Modifique o caminho do svdFile (coloque o SVD na pasta /tools/svd/).
 
-In the appropriate header file (e.g. stm32f1xx.h):
+.vscode/tasks.json * Modifique o "command" para refletir o preset/chip correto.
 
-#define STM32F103xB
-📦 Project Configuration
+/cmake/mcu/stm32xx.cmake * Configure as linhas apontando para o LINKER_SCRIPT (.ld) e STARTUP_FILE (.s) corretos.
 
-When changing MCU or creating a new project, update the following:
+CMakePresets.json * Em "cacheVariables", modifique apenas "MCU_FAMILY" e "TARGET_MCU".
 
-1. .vscode/launch.json
-Set the correct target device
-Update the svdFile path
+🪟 Debug via USBIPD
+Como o container roda dentro do WSL2, ele não tem acesso nativo às portas USB do Windows. Para gravar e debugar, repasse a conexão:
 
-Place your .svd file in:
+Conecte sua placa STM32 (ST-Link) na porta USB do PC.
 
-/tools/svd/
-2. .vscode/tasks.json
-Update the "command" to match your build preset
-3. /cmake/mcu/stm32xx.cmake
+Abra o PowerShell no Windows como Administrador.
 
-Configure:
+Liste os dispositivos USB conectados:
 
-Linker script (.ld)
-Startup file (.s)
-4. CMakePresets.json
-
-Update:
-
-{
-  "MCU_FAMILY": "f1",
-  "TARGET_MCU": "STM32F103C8"
-}
-🔌 ST-Link Setup (USBIPD)
-
-Since the container runs inside WSL2, USB devices must be forwarded manually.
-
-1. Connect your board
-
-Plug the STM32 (ST-Link) into USB.
-
-2. Open PowerShell as Administrator
-3. List USB devices
+PowerShell
 usbipd list
-4. Bind device
-usbipd bind --busid <BUS-ID>
-5. Attach to WSL
-usbipd attach --wsl --busid <BUS-ID>
+Identifique o BUS-ID referente ao seu ST-Link.
 
-✅ The ST-Link will now be available inside the container.
+Execute os comandos substituindo <BUS-ID>:
+
+PowerShell
+usbipd bind --busid <BUS-ID>
+usbipd attach --wsl --busid <BUS-ID>
