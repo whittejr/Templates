@@ -1,114 +1,101 @@
-# Embedded Environment 🇬🇧 / 🇧🇷
-*For the Portuguese version, [click here](#embedded-environment-🇧🇷).*
+# 🧠 Embedded STM32 Development Environment
 
-This repository contains the source code and the development environment for firmware based on STM32 microcontrollers. The project uses a containerized environment via Docker, ensuring isolated and standardized build tools (CMake, toolchains) across different operating systems.
+Este repositório contém o código-fonte e o ambiente de desenvolvimento para firmware baseado em microcontroladores **STM32**.
 
-## 🛠️ Environment & Prerequisites
+O projeto utiliza um ambiente conteinerizado via **Docker**, garantindo que todas as ferramentas de build (CMake, toolchains, analisadores) estejam totalmente isoladas e padronizadas — sem poluir sua máquina host.
 
-To build, debug, and flash the firmware, you need the following tools configured on your host machine:
+---
 
-* **Docker:** Engine for running the development container.
-* **VSCode:** With the *Dev Containers*, *C/C++*, and *clangd* extensions.
+## 🛠️ Pré-requisitos da Máquina Host
 
-### OS-Specific Setup for Debugger (ST-Link)
+Para compilar, debugar e gravar o firmware, sua máquina precisa apenas do essencial para rodar o container.
 
-To attach your USB debugger to the Docker container, the setup varies depending on your host OS:
+### 🔧 Requisitos gerais
 
-#### 🐧 Linux (Native)
-Docker can directly access USB devices on Linux. You just need to ensure your user has permission to access the ST-Link (usually by adding your user to the `dialout` or `plugdev` group, or by setting up the appropriate `udev` rules for STMicroelectronics devices). The dev container will handle the rest.
+- Docker Engine (ou Docker Desktop)
+- VSCode
+- Extensão **Dev Containers** no VSCode
 
-#### 🪟 Windows (WSL2)
-You will need **WSL2**, **Docker Desktop** (with WSL2 integration), and **USBIPD** to attach the USB device from Windows into the WSL2 environment.
+---
 
-```cmd
+### 🖥️ Configuração por sistema operacional
+
+| Sistema Operacional | Ferramentas Necessárias | Configuração adicional |
+|--------------------|------------------------|------------------------|
+| **Geral (Todos)** | Docker + VSCode | Instalar extensão Dev Containers |
+| **Windows (WSL2)** | USBIPD | Executar `wsl --update` |
+| **Linux (Nativo)** | Nenhuma extra | Adicionar usuário aos grupos `dialout` ou `plugdev` |
+
+---
+
+## 🚀 Tutorial de Inicialização
+
+Siga os passos abaixo para iniciar um novo projeto:
+
+```bash
+git clone <link_template.git>
+Garanta que o Docker esteja rodando
+Abra a pasta no VSCode
+Pressione F1
+Selecione:
+Dev Containers: Reopen in Container
+Aguarde a construção do ambiente
+⚙️ Setup do microcontrolador
+
+No terminal do VSCode (já dentro do container):
+
+./tools/get_mcu.sh <familia>
+
+Exemplo:
+
+./tools/get_mcu.sh wb
+🪟 Debug no Windows (USBIPD + WSL2)
+
+Como o WSL2 não acessa USB diretamente, é necessário "injetar" o ST-Link:
+
+Abra um PowerShell como administrador:
+
 usbipd list
+
+Identifique o BUS-ID, depois execute:
+
 usbipd bind --busid <BUS-ID>
 usbipd attach --wsl --busid <BUS-ID>
-```
+📦 Configuração para Novos Targets
 
----
+O projeto foi estruturado para ser portável entre diferentes microcontroladores STM32.
 
-## 📦 Dependencies & Target Configuration
+Ao trocar o target, ajuste os seguintes pontos:
 
-This project is designed to be portable across different chips. If you need to change the target microcontroller, it is mandatory to adjust the following dependencies:
+1️⃣ VSCode (.vscode/)
+launch.json
+Atualizar configFiles para o novo chip
+Ajustar svdFile (/tools/svd/)
+tasks.json
+Alterar o target no parâmetro command (preset do CMake)
+Clangd (IntelliSense)
+Ajustar o caminho do compile_commands.json
+Apontar para o diretório de build correto
+2️⃣ CMake
+CMakePresets.json
+Atualizar:
+name
+MCU_FAMILY
+TARGET_MCU
+Ajustar diretórios de saída (build/debug/release)
+3️⃣ Linker e Startup
+Definir corretamente:
+Arquivo .ld (linker)
+Arquivo .s (startup)
 
-### 1. VSCode Dependencies (.vscode/)
+Esses arquivos devem estar referenciados no .cmake da família:
 
-**launch.json:**
-- Update the `configFiles` target to the specific chip.
-- Add/Update the `svdFile` path to point to the specific chip's `.svd` file (located in `/tools/svd/`).
-
-**tasks.json:**
-- Change the target specified in the `"command"` parameter.
-
-**Clangd (IntelliSense):**
-- The `CompilationDatabase` setting requires the exact debug path of the specific chip so IntelliSense can correctly locate the `compile_commands.json`.
-
----
-
-### 2. CMake Dependencies
-
-**CMakePresets.json:**
-- Adjust the `"name"` of the preset.
-- In `"cacheVariables"`, update the `"MCU_FAMILY"` and `"TARGET_MCU"` variables.
-- Adjust the debug and release binary output directories to include the specific chip's name.
-
-**Linker and Startup (/core/):**
-- The linker (`.ld`) and startup (`.s`) files must be correctly defined and referenced inside `stm32wb.cmake` (located in the `/core/` folder).
-
----
-
-# Embedded Environment 🇧🇷
-
-Este repositório contém o código-fonte e o ambiente de desenvolvimento para o firmware baseado em microcontroladores STM32. O projeto utiliza um ambiente conteinerizado via Docker, garantindo que as ferramentas de build (CMake, toolchains) estejam isoladas e padronizadas em diferentes sistemas operacionais.
-
-## 🛠️ Ambiente e Pré-requisitos
-
-Para compilar, debugar e gravar o firmware, você precisará configurar o seguinte ambiente na sua máquina host:
-
-- Docker: Motor para rodar o container de desenvolvimento.
-- VSCode: Com as extensões Dev Containers, C/C++ e clangd.
-
-### Configuração do Debugger (ST-Link) por Sistema Operacional
-
-#### 🐧 Linux (Nativo)
-O Docker consegue acessar os dispositivos USB nativamente no Linux. Você só precisa garantir que seu usuário tem permissão para acessar o ST-Link (geralmente adicionando o usuário ao grupo dialout ou plugdev, ou configurando as regras do udev para dispositivos STMicroelectronics). O dev container cuida do resto.
-
-#### 🪟 Windows (WSL2)
-Você precisará do WSL2, Docker Desktop (com integração ao WSL2 habilitada) e do USBIPD para anexar o dispositivo USB do Windows para dentro do ambiente WSL2.
-
-```cmd
-usbipd list
-usbipd bind --busid <BUS-ID>
-usbipd attach --wsl --busid <BUS-ID>
-```
-
----
-
-## 📦 Dependências e Configuração do Target
-
-Este projeto foi desenhado para ser portável entre diferentes chips. Se você precisar alterar o microcontrolador alvo, é obrigatório ajustar as seguintes dependências:
-
-### 1. Dependências do VSCode (.vscode/)
-
-**launch.json:**
-- Atualize o target na chave `configFiles` para o chip específico.
-- Adicione/atualize a chave `svdFile` para apontar para o arquivo `.svd` do chip específico (localizado em `/tools/svd/`).
-
-**tasks.json:**
-- Altere o target especificado dentro do parâmetro `"command"`.
-
-**Clangd (IntelliSense):**
-- A configuração `CompilationDatabase` precisa do caminho exato da pasta de debug do chip específico para encontrar o `compile_commands.json` corretamente.
-
----
-
-### 2. Dependências do CMake
-
-**CMakePresets.json:**
-- Ajuste o `"name"` do preset.
-- Em `"cacheVariables"`, atualize as variáveis `"MCU_FAMILY"` e `"TARGET_MCU"`.
-- Altere o diretório de saída dos binários nas configurações de debug e release para incluir o nome do chip específico.
-
-**Linker e Startup (/core/):**
-- Os arquivos de linker (`.ld`) e startup (`.s`) devem ser definidos e referenciados corretamente dentro do arquivo `stm32wb.cmake` (na pasta `/core/`).
+/core/stm32xx.cmake
+📁 Estrutura do Projeto
+.
+├── core/                # Configuração por família de MCU
+├── tools/               # Scripts e SVDs
+├── .vscode/             # Debug, tasks e IntelliSense
+├── CMakePresets.json    # Presets de build
+├── CMakeLists.txt       # Build principal
+└── Dockerfile           # Ambiente conteinerizado
