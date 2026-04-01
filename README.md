@@ -1,101 +1,85 @@
-# 🧠 Embedded STM32 Development Environment
+🧠 Ambiente de Desenvolvimento STM32 (Windows)
+Este repositório contém o ambiente de desenvolvimento e código-fonte para firmware baseado em microcontroladores STM32. Todo o projeto roda de forma isolada em um ambiente conteinerizado via Docker e WSL2, garantindo que as ferramentas de build e análise fiquem padronizadas e sem poluir a sua máquina host.
 
-Este repositório contém o código-fonte e o ambiente de desenvolvimento para firmware baseado em microcontroladores **STM32**.
+🛠️ Pré-requisitos (Máquina Host)
+Para compilar, debugar e gravar o firmware no Windows, você precisará instalar:
 
-O projeto utiliza um ambiente conteinerizado via **Docker**, garantindo que todas as ferramentas de build (CMake, toolchains, analisadores) estejam totalmente isoladas e padronizadas — sem poluir sua máquina host.
+Docker Desktop (com integração WSL2 ativada)
 
----
+WSL2 (Windows Subsystem for Linux)
 
-## 🛠️ Pré-requisitos da Máquina Host
+VSCode
 
-Para compilar, debugar e gravar o firmware, sua máquina precisa apenas do essencial para rodar o container.
+Extensão Dev Containers (no VSCode)
 
-### 🔧 Requisitos gerais
+USBIPD-WIN (ferramenta para repassar o ST-Link do Windows para o WSL)
 
-- Docker Engine (ou Docker Desktop)
-- VSCode
-- Extensão **Dev Containers** no VSCode
+🚀 Inicialização do Projeto
+Siga os passos abaixo para carregar o ambiente conteinerizado:
 
----
+Clone o repositório em sua máquina:
 
-### 🖥️ Configuração por sistema operacional
+Bash
+git clone <link_do_seu_repositorio.git>
+Garanta que o Docker Desktop esteja rodando em segundo plano.
 
-| Sistema Operacional | Ferramentas Necessárias | Configuração adicional |
-|--------------------|------------------------|------------------------|
-| **Geral (Todos)** | Docker + VSCode | Instalar extensão Dev Containers |
-| **Windows (WSL2)** | USBIPD | Executar `wsl --update` |
-| **Linux (Nativo)** | Nenhuma extra | Adicionar usuário aos grupos `dialout` ou `plugdev` |
+Abra a pasta do projeto no VSCode.
 
----
+Pressione F1 (ou Ctrl+Shift+P) para abrir a paleta de comandos.
 
-## 🚀 Tutorial de Inicialização
+Digite e selecione: Dev Containers: Reopen in Container.
 
-Siga os passos abaixo para iniciar um novo projeto:
+Aguarde o VSCode construir e iniciar o ambiente (isso pode levar alguns minutos na primeira vez).
 
-```bash
-git clone <link_template.git>
-Garanta que o Docker esteja rodando
-Abra a pasta no VSCode
-Pressione F1
-Selecione:
-Dev Containers: Reopen in Container
-Aguarde a construção do ambiente
-⚙️ Setup do microcontrolador
+⚙️ Setup do Microcontrolador
+Com o terminal do VSCode aberto já dentro do container, configure a família do seu chip:
 
-No terminal do VSCode (já dentro do container):
+Verifique o suporte: Confirme se a família do seu chip existe na pasta /cmake/mcu/. (Atualmente suportados: wb e f1).
 
-./tools/get_mcu.sh <familia>
+Baixe as dependências: Execute o script informando a família do chip. Exemplo para a família F1:
 
-Exemplo:
+Bash
+./tools/get_mcu.sh f1
+Configure a HAL:
 
-./tools/get_mcu.sh wb
-🪟 Debug no Windows (USBIPD + WSL2)
+Navegue até a pasta: /third_party/stm32cube<chip>/Drivers/STM32XXXX_HAL_DRIVER/Inc/
 
-Como o WSL2 não acessa USB diretamente, é necessário "injetar" o ST-Link:
+Renomeie o arquivo stm32xxxx_hal_conf_template.h removendo o sufixo _template.
 
-Abra um PowerShell como administrador:
+Defina o Chip: Certifique-se de adicionar o #define do seu chip específico no arquivo stm32xxxx.h correspondente (ex: #define STM32F103xB).
 
+📦 Configuração do Target (Arquivos do Projeto)
+Ao iniciar um novo projeto ou trocar de chip, você precisa ajustar as configurações de build e debug nos seguintes arquivos:
+
+1️⃣ .vscode/launch.json (Debug)
+Modifique o target para apontar para o chip correto.
+
+Modifique o caminho do svdFile. (O arquivo SVD do seu microcontrolador deve ser colocado na pasta /tools/svd/).
+
+2️⃣ .vscode/tasks.json (Tasks do VSCode)
+Modifique o parâmetro "command" para refletir o preset/chip correto que será compilado.
+
+3️⃣ /cmake/mcu/stm32xx.cmake (Linker e Startup)
+Configure as linhas apontando para o LINKER_SCRIPT (.ld) e o STARTUP_FILE (.s) corretos para o seu modelo específico de chip.
+
+4️⃣ CMakePresets.json (Presets de Build)
+Na seção "cacheVariables", modifique apenas os valores de "MCU_FAMILY" e "TARGET_MCU" para corresponderem ao seu hardware.
+
+🪟 Conectando o ST-Link (Debug via USBIPD)
+Como o container roda dentro do WSL2, ele não tem acesso nativo às portas USB do Windows. Para conseguir gravar e debugar seu firmware, você precisa "injetar" a conexão do ST-Link:
+
+Conecte sua placa STM32 (ST-Link) na porta USB do PC.
+
+Abra o PowerShell no Windows como Administrador.
+
+Liste os dispositivos USB conectados:
+
+PowerShell
 usbipd list
+Identifique o BUS-ID referente ao seu ST-Link na lista.
 
-Identifique o BUS-ID, depois execute:
+Execute os comandos abaixo substituindo <BUS-ID> pelo número encontrado:
 
+PowerShell
 usbipd bind --busid <BUS-ID>
 usbipd attach --wsl --busid <BUS-ID>
-📦 Configuração para Novos Targets
-
-O projeto foi estruturado para ser portável entre diferentes microcontroladores STM32.
-
-Ao trocar o target, ajuste os seguintes pontos:
-
-1️⃣ VSCode (.vscode/)
-launch.json
-Atualizar configFiles para o novo chip
-Ajustar svdFile (/tools/svd/)
-tasks.json
-Alterar o target no parâmetro command (preset do CMake)
-Clangd (IntelliSense)
-Ajustar o caminho do compile_commands.json
-Apontar para o diretório de build correto
-2️⃣ CMake
-CMakePresets.json
-Atualizar:
-name
-MCU_FAMILY
-TARGET_MCU
-Ajustar diretórios de saída (build/debug/release)
-3️⃣ Linker e Startup
-Definir corretamente:
-Arquivo .ld (linker)
-Arquivo .s (startup)
-
-Esses arquivos devem estar referenciados no .cmake da família:
-
-/core/stm32xx.cmake
-📁 Estrutura do Projeto
-.
-├── core/                # Configuração por família de MCU
-├── tools/               # Scripts e SVDs
-├── .vscode/             # Debug, tasks e IntelliSense
-├── CMakePresets.json    # Presets de build
-├── CMakeLists.txt       # Build principal
-└── Dockerfile           # Ambiente conteinerizado
