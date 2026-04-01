@@ -31,7 +31,7 @@
       }
     },
     {
-      "name": "stm32wb55-release",
+      "name": "wb55-release",
       "displayName": "STM32WB55 (Release)",
       "inherits": "stm32wb55-base",
       "binaryDir": "${sourceDir}/build/wb55-release",
@@ -46,8 +46,8 @@
       "configurePreset": "wb55-debug"
     },
     {
-      "name": "stm32wb55-release",
-      "configurePreset": "stm32wb55-release"
+      "name": "wb55-release",
+      "configurePreset": "wb55-release"
     }
   ]
 }

@@ -21,7 +21,6 @@
                 "mcu-debug.memory-view",
                 "mcu-debug.rtos-views",
                 "cschlosser.doxdocgen",
-                "eamodio.gitlens",
                 "cweijan.vscode-office"
             ]
         }     

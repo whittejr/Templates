@@ -1,3 +1,0 @@
-[submodule "lib/third_party/stm32cubewb"]
-	path = lib/third_party/stm32cubewb
-	url = https://github.com/STMicroelectronics/stm32cubewb.git

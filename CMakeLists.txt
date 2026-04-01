@@ -7,34 +7,25 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(EXECUTABLE "firmware")
 
-# ==============================================================================
-# 1. INJEÇÃO DE HARDWARE
-# ==============================================================================
 if(NOT DEFINED MCU_FAMILY)
     message(FATAL_ERROR "MCU_FAMILY não definida!")
 endif()
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/mcu/${MCU_FAMILY}.cmake")
 
-# 🚨 AS ARMADILHAS DE DEBUG 🚨
-# Se as variáveis estiverem vazias, o CMake vai abortar e te avisar o porquê!
 if("${LINKER_SCRIPT}" STREQUAL "")
-    message(FATAL_ERROR "ERRO: A variável LINKER_SCRIPT está vazia! Verifique o seu arquivo stm32wb.cmake.")
+    message(FATAL_ERROR "ERRO: A variável LINKER_SCRIPT está vazia! Verifique o seu arquivo ${MCU_FAMILY}.cmake.")
 endif()
 
 if("${HAL_SOURCES}" STREQUAL "")
     message(FATAL_ERROR "ERRO: A variável HAL_SOURCES está vazia! A HAL não será compilada.")
 endif()
 
-# ==============================================================================
-# 2. AUTO-DISCOVERY (O Radar com as suas pastas)
-# ==============================================================================
 file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS
     "core/src/*.c"
     "lib/BSP/src/*.c"
     "lib/components/*.c"
 )
-
 file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS 
     "core/inc/*.h" 
     "lib/BSP/inc/*.h" 
@@ -51,10 +42,6 @@ if(APP_INCLUDES)
     list(REMOVE_DUPLICATES APP_INCLUDES)
 endif()
 
-# ==============================================================================
-# 3. CRIAÇÃO DO EXECUTÁVEL E INCLUDES
-# ==============================================================================
-# Se a armadilha não disparar, o executável vai receber a HAL perfeitamente
 add_executable(${EXECUTABLE} ${APP_SOURCES} ${HAL_SOURCES})
 
 target_include_directories(${EXECUTABLE} PRIVATE 
@@ -67,7 +54,7 @@ target_compile_options(${EXECUTABLE} PRIVATE
     -Wall 
     -Wpedantic 
     -Wno-unused-parameter
-    -Wno-macro-redefined  # <--- Isso mata o aviso de "redefined"
+    -Wno-macro-redefined
 )
 
 target_link_options(${EXECUTABLE} PRIVATE
@@ -81,9 +68,6 @@ target_link_options(${EXECUTABLE} PRIVATE
 
 target_link_libraries(${EXECUTABLE} PRIVATE -lc -lm)
 
-# ==============================================================================
-# 4. PÓS-BUILD
-# ==============================================================================
 add_custom_command(TARGET ${EXECUTABLE} POST_BUILD
     COMMAND ${CMAKE_SIZE} $<TARGET_FILE:${EXECUTABLE}>
 )

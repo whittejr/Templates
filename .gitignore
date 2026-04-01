@@ -1,2 +1,5 @@
 build/
-.cache/
+.vscode/.cmake/
+.vscode/ipch/
+*.code-workspace
+
