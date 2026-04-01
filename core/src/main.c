@@ -1,3 +1,11 @@
+/**
+* @file    main.c
+* @brief   none
+* @version 0.1.0
+* @author  Your name here
+* @date    2026-03-31
+*/
+
 #include "stm32wbxx_hal.h"
 
 void SystemClock_Config(void);

@@ -1,11 +1,10 @@
-
 /**
- * @file main.h
- * @brief  none
- * @version 0.1
- * @author Alessandro Davi
- * @date 2025-11-03
- */
+* @file    main.h
+* @brief   none
+* @version 0.1.0
+* @author  Your name here
+* @date    2026-03-31
+*/
 
 #ifndef __MAIN_H
 #define __MAIN_H
@@ -14,7 +13,6 @@
 extern "C" {
 #endif
 
-/* 2. O Include principal do HAL */
 #include "stm32wbxx_hal.h"
 
 
