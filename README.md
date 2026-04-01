@@ -1,15 +1,6 @@
 <div align="center">
   <h1>🧠 Ambiente de Desenvolvimento STM32</h1>
   <p>Um workspace isolado e conteinerizado para desenvolvimento moderno de firmware STM32.</p>
-
-  <img src="[https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)" alt="Docker" />
-  <img src="[https://img.shields.io/badge/C-00599C?style=flat-square&logo=c&logoColor=white](https://img.shields.io/badge/C-00599C?style=flat-square&logo=c&logoColor=white)" alt="C" />
-  <img src="[https://img.shields.io/badge/CMake-064F8C?style=flat-square&logo=cmake&logoColor=white](https://img.shields.io/badge/CMake-064F8C?style=flat-square&logo=cmake&logoColor=white)" alt="CMake" />
-  <img src="[https://img.shields.io/badge/STM32-03234B?style=flat-square&logo=stmicroelectronics&logoColor=white](https://img.shields.io/badge/STM32-03234B?style=flat-square&logo=stmicroelectronics&logoColor=white)" alt="STM32" />
-  <img src="[https://img.shields.io/badge/WSL2-FCC624?style=flat-square&logo=linux&logoColor=black](https://img.shields.io/badge/WSL2-FCC624?style=flat-square&logo=linux&logoColor=black)" alt="WSL2" />
-  <br>
-  <br>
-  <i>Leia em outros idiomas: <a href="README.md">English</a></i>
 </div>
 
 ---
@@ -55,7 +46,7 @@ Para compilar, debugar e gravar o firmware no Windows, você precisará ter inst
 Execute o comando abaixo no seu terminal para clonar o repositório:
 
 ```bash
-git clone <link_do_seu_repositorio.git>
+git clone https://github.com/whittejr/Templates.git
 ```
 
 **Passos para inicialização:**
