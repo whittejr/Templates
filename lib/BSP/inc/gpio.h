@@ -2,8 +2,8 @@
  * @file gpio.h
  * @brief  none
  * @version 0.1
- * @author Alessandro Davi
- * @date 2025-11-05
+ * @author 
+ * @date 
  */
 
 #ifndef GPIO_H

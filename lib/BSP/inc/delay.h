@@ -2,8 +2,8 @@
  * @file delay.h
  * @brief  none
  * @version 0.1
- * @author Alessandro Davi
- * @date 2025-11-10
+ * @author
+ * @date
  */
 
 #ifndef DELAY_H

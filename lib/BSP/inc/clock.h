@@ -2,8 +2,8 @@
  * @file clock.h
  * @brief  none
  * @version 0.1
- * @author Alessandro Davi
- * @date 2026-01-07
+ * @author
+ * @date
  */
 
 #ifndef CLOCK_H
