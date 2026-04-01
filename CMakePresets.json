@@ -11,18 +11,18 @@
       }
     },
     {
-      "name": "stm32wb55-base",
+      "name": "chip-base",
       "hidden": true,
       "inherits": "base-toolchain",
       "cacheVariables": {
-        "MCU_FAMILY": "stm32wb",
-        "TARGET_MCU": "STM32WB55xx"
+        "MCU_FAMILY": "stm32f1",
+        "TARGET_MCU": "STM32F1XX"
       }
     },
     {
-      "name": "wb55-debug",
-      "displayName": "STM32WB55 (Debug)",
-      "inherits": "stm32wb55-base",
+      "name": "chip-debug",
+      "displayName": "Debug",
+      "inherits": "chip-base",
       "binaryDir": "${sourceDir}/build/debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
@@ -31,8 +31,8 @@
   ],
   "buildPresets": [
     {
-      "name": "wb55-debug",
-      "configurePreset": "wb55-debug"
+      "name": "chip-debug",
+      "configurePreset": "chip-debug"
     }
   ]
 }

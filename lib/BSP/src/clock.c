@@ -6,20 +6,13 @@
  * @date    
  */
 
-#include "stm32wbxx_hal.h"
-
-/**
- * @file    
- * @brief   
- */
-
-#include "stm32wbxx_hal.h"
-#include "stm32wbxx_hal_rcc.h"
+#include "clock.h"
+#include "stdint.h"
 
 uint8_t clock_config(void) {
   
   /*
-  * clock can be generated using CubeMX Software
+  * clock configuration can be generated using CubeMX Software
   */
 
 

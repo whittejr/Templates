@@ -4,12 +4,12 @@
     {
       "label": "Configure",
       "type": "shell",
-      "command": "cmake --preset wb55-debug"
+      "command": "cmake --preset chip-debug"
     },
     {
       "label": "Build",
       "type": "shell",
-      "command": "cmake --build --preset wb55-debug",
+      "command": "cmake --build --preset chip-debug",
       "dependsOn": [
         "Configure"
       ],
@@ -21,7 +21,7 @@
     {
       "label": "Flash",
       "type": "shell",
-      "command": "openocd -f interface/stlink.cfg -f target/stm32wbx.cfg -c 'program build/debug/firmware.elf verify reset exit'",
+      "command": "openocd -f interface/stlink.cfg -f target/stm32wbx.cfg -c 'program build/debug/firmware.elf verify reset exit'", /* change to the correct target */
       "dependsOn": [
         "Build"
       ],

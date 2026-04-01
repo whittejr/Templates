@@ -7,8 +7,8 @@
  */
 
 #include "delay.h"
-#include "stm32wbxx_hal.h"
+#include "stdint.h"
 
 void delay_ms(uint32_t ms) {
-    HAL_Delay(ms);
+    // HAL_Delay(ms);
 }
