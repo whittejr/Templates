@@ -9,6 +9,7 @@
         "--privileged",
         "-v", "/dev/bus/usb:/dev/bus/usb"
     ],
+    "remoteUser": "root",
     
     "customizations": {
         "vscode": {

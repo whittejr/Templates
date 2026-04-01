@@ -17,21 +17,22 @@ cd "$PROJECT_ROOT"
 # ==============================================================================
 # 1. INIT REPOSITORY (Ghost Clone + Absolute Auto-Heal)
 # ==============================================================================
-# Se a pasta física não existir OU o Git dentro dela estiver quebrado, aniquila os rastros e baixa.
 if [ ! -d "$TARGET_DIR" ] || ! git -C "$TARGET_DIR" rev-parse HEAD >/dev/null 2>&1; then
     echo "🧹 Preparing clean environment..."
+    
+    # --- A MUDANÇA ESTÁ AQUI ---
+    # Garante que a estrutura de pastas dentro de .git/modules exista
+    mkdir -p ".git/modules/$(dirname "$TARGET_DIR")"
+    # ---------------------------
+
     git submodule deinit -f "$TARGET_DIR" 2>/dev/null || true
     rm -rf ".git/modules/$TARGET_DIR" "$TARGET_DIR"
-    git config --remove-section submodule.$TARGET_DIR 2>/dev/null || true
-    git rm -f "$TARGET_DIR" 2>/dev/null || true
-
-    echo "📦 Fetching repository data (Skipping heavy file extraction for maximum speed)..."
     
-    # MÁGICA: Usamos o 'git clone' puro (que aceita o --no-checkout) e 
-    # separamos a pasta do Git para dentro do cache de módulos do projeto!
+    echo "📦 Fetching repository data..."
+    
+    # Agora o Git vai achar a pasta para colocar os metadados
     git clone --depth 1 --no-checkout --separate-git-dir ".git/modules/$TARGET_DIR" "$REPO_URL" "$TARGET_DIR"
     
-    # Registra o submódulo manualmente para o projeto principal reconhecer
     git config -f .gitmodules "submodule.$TARGET_DIR.path" "$TARGET_DIR"
     git config -f .gitmodules "submodule.$TARGET_DIR.url" "$REPO_URL"
     git add .gitmodules "$TARGET_DIR" 2>/dev/null || true
