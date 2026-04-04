@@ -2,8 +2,9 @@ message(STATUS "Configurando paths e flags para a familia STM32WB...")
 
 set(THIRD_PARTY "${CMAKE_CURRENT_SOURCE_DIR}/lib/third_party/stm32cubewb/Drivers")
 
-set(LINKER_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/core/stm32wb55xx_flash_cm4.ld")
-set(STARTUP_FILE "${CMAKE_CURRENT_SOURCE_DIR}/core/startup_stm32wb55xx_cm4.s")
+set(CMSIS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/third_party/stm32cubewb/Drivers/CMSIS/Device/ST/STM32WBxx/Source/Templates/")
+set(LINKER_SCRIPT "${CMSIS_DIR}/gcc/linker/stm32wb55xx_flash_cm4.ld")
+set(STARTUP_FILE "${CMSIS_DIR}/gcc/startup_stm32wb55xx_cm4.s")
 
 set(HAL_SOURCES
     ${STARTUP_FILE}

@@ -6,10 +6,10 @@
 * @date    2026-03-31
 */
 
-#include "stm32f1xx_hal.h"
+#include "stm32wbxx_hal.h"
 
-#define led_pin GPIO_PIN_13
-#define led_port GPIOC
+#define led_pin GPIO_PIN_4
+#define led_port GPIOE
 
 void clk_enable(void);
 
@@ -29,11 +29,11 @@ int main(void)
     while (1)
     {
         HAL_GPIO_TogglePin(led_port, led_pin);
-        HAL_Delay(1000);
+        HAL_Delay(300);
     }
     return 0;
 }
 
 void clk_enable(void) {
-    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOE_CLK_ENABLE();
 }

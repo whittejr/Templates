@@ -15,8 +15,8 @@
       "hidden": true,
       "inherits": "base-toolchain",
       "cacheVariables": {
-        "MCU_FAMILY": "stm32f1",
-        "TARGET_MCU": "STM32F1XX"
+        "MCU_FAMILY": "stm32wb",
+        "TARGET_MCU": "STM32WBXX"
       }
     },
     {
